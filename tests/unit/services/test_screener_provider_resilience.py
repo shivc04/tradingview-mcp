@@ -100,7 +100,7 @@ def test_persistent_failure_raises_runtime_error(fast_retry):
 
 def test_stale_while_error_returns_cached_payload(fast_retry):
     """When upstream is dead, stale cached data should serve as fallback."""
-    cache_key = ("indicators_v1", "EGX", ("EGX:ASCM",), "1D", None)
+    cache_key = ("indicators_v1", "NSE", ("NSE:HDFCBANK",), "1D", None)
     sp._cache_set(cache_key, (1, "stale_df"))
 
     # Force the freshness window to be already expired so _cache_get misses,
@@ -141,16 +141,16 @@ def test_resilient_ta_uses_fresh_cache_first(fast_retry, monkeypatch):
 
     def fake_gma(screener, interval, symbols, **kwargs):
         call_count["n"] += 1
-        return {"EGX:ASCM": object()}
+        return {"NSE:HDFCBANK": object()}
 
     fake_module = mock.MagicMock()
     fake_module.get_multiple_analysis = fake_gma
     monkeypatch.setitem(__import__("sys").modules, "tradingview_ta", fake_module)
 
     # First call hits upstream
-    sp.resilient_get_multiple_analysis("egypt", "1D", ["EGX:ASCM"])
+    sp.resilient_get_multiple_analysis("india", "1D", ["NSE:HDFCBANK"])
     # Second call within TTL must hit cache
-    sp.resilient_get_multiple_analysis("egypt", "1D", ["EGX:ASCM"])
+    sp.resilient_get_multiple_analysis("india", "1D", ["NSE:HDFCBANK"])
     assert call_count["n"] == 1
 
 
@@ -162,13 +162,13 @@ def test_resilient_ta_passes_timeout_explicitly(fast_retry, monkeypatch):
 
     def fake_gma(screener, interval, symbols, **kwargs):
         captured["timeout"] = kwargs.get("timeout")
-        return {"EGX:ASCM": "ok"}
+        return {"NSE:HDFCBANK": "ok"}
 
     fake_module = mock.MagicMock()
     fake_module.get_multiple_analysis = fake_gma
     monkeypatch.setitem(__import__("sys").modules, "tradingview_ta", fake_module)
 
-    sp.resilient_get_multiple_analysis("egypt", "1D", ["EGX:ASCM"])
+    sp.resilient_get_multiple_analysis("india", "1D", ["NSE:HDFCBANK"])
 
     assert captured["timeout"] is not None, "timeout must be passed explicitly"
     assert 1.0 <= captured["timeout"] <= 60.0, f"timeout should be a sane value, got {captured['timeout']}"
@@ -181,7 +181,7 @@ def test_resilient_ta_returns_stale_on_persistent_failure(fast_retry, monkeypatc
     def fake_gma(screener, interval, symbols, **kwargs):
         call_count["n"] += 1
         if call_count["n"] == 1:
-            return {"EGX:ASCM": "good_payload"}
+            return {"NSE:HDFCBANK": "good_payload"}
         raise _empty_body_error()
 
     fake_module = mock.MagicMock()
@@ -189,16 +189,16 @@ def test_resilient_ta_returns_stale_on_persistent_failure(fast_retry, monkeypatc
     monkeypatch.setitem(__import__("sys").modules, "tradingview_ta", fake_module)
 
     # Prime the cache with one successful call
-    first = sp.resilient_get_multiple_analysis("egypt", "1D", ["EGX:ASCM"])
-    assert first == {"EGX:ASCM": "good_payload"}
+    first = sp.resilient_get_multiple_analysis("india", "1D", ["NSE:HDFCBANK"])
+    assert first == {"NSE:HDFCBANK": "good_payload"}
 
     # Manually expire the FRESH window so the next call must re-fetch,
     # but stale window still holds.
-    cache_key = ("ta_multi_v1", "egypt", "1D", ("EGX:ASCM",))
+    cache_key = ("ta_multi_v1", "india", "1D", ("NSE:HDFCBANK",))
     with sp._SCREENER_CACHE_LOCK:
         ts, payload = sp._SCREENER_CACHE[cache_key]
         sp._SCREENER_CACHE[cache_key] = (ts - 120.0, payload)
 
     # Upstream now broken; stale fallback should kick in
-    result = sp.resilient_get_multiple_analysis("egypt", "1D", ["EGX:ASCM"])
-    assert result == {"EGX:ASCM": "good_payload"}
+    result = sp.resilient_get_multiple_analysis("india", "1D", ["NSE:HDFCBANK"])
+    assert result == {"NSE:HDFCBANK": "good_payload"}

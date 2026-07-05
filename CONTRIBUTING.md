@@ -147,7 +147,7 @@ def test_real_market_data():
    ```python
    # In core/utils/validators.py
    EXCHANGE_SCREENER = {
-       "NEW_EXCHANGE": "crypto",  # or "america", "turkey"
+       "NEW_EXCHANGE": "crypto",  # or "america", "india"
        # ... existing exchanges
    }
    ```

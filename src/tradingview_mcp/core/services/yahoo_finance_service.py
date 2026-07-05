@@ -10,7 +10,7 @@ Works with any symbol Yahoo Finance supports:
   ETFs:    SPY, QQQ, VTI
   Indices: ^GSPC (S&P500), ^DJI (Dow), ^IXIC (NASDAQ)
   FX:      EURUSD=X, GBPUSD=X
-  Turkish: THYAO.IS, SASA.IS
+  Indian:  RELIANCE.NS, TCS.NS, SENSEX (^BSESN), NIFTY 50 (^NSEI)
 """
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def get_price(symbol: str) -> dict:
     Get real-time price data for any Yahoo Finance symbol.
 
     Args:
-        symbol: Yahoo Finance symbol (e.g. "AAPL", "BTC-USD", "THYAO.IS", "^GSPC")
+        symbol: Yahoo Finance symbol (e.g. "AAPL", "BTC-USD", "RELIANCE.NS", "^GSPC")
 
     Returns:
         dict with price, change, change_pct, currency, exchange, market_state
@@ -119,7 +119,7 @@ def get_market_snapshot() -> dict:
         Dict with stocks (S&P500, NASDAQ, Dow), crypto (BTC, ETH), and FX
     """
     groups = {
-        "indices": ["^GSPC", "^DJI", "^IXIC", "^VIX"],
+        "indices": ["^GSPC", "^DJI", "^IXIC", "^VIX", "^NSEI", "^BSESN"],
         "crypto":  ["BTC-USD", "ETH-USD", "SOL-USD", "BNB-USD"],
         "fx":      ["EURUSD=X", "GBPUSD=X", "JPYUSD=X"],
         "etfs":    ["SPY", "QQQ", "GLD"],

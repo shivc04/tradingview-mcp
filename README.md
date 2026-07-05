@@ -370,7 +370,7 @@ Example prompt: "Compare all 9 strategies on MSFT for 2 years"
 | `yahoo_price` | Real-time quote: price, change %, 52w high/low, market state |
 | `market_snapshot` | Global overview: S&P500, NASDAQ, VIX, BTC, ETH, EUR/USD, SPY, GLD |
 
-**Supports:** Stocks (AAPL, TSLA, NVDA), Crypto (BTC-USD, ETH-USD, SOL-USD), ETFs (SPY, QQQ, GLD), Indices (^GSPC, ^DJI, ^IXIC, ^VIX), FX (EURUSD=X), Turkish (THYAO.IS, SASA.IS)
+**Supports:** Stocks (AAPL, TSLA, NVDA), Crypto (BTC-USD, ETH-USD, SOL-USD), ETFs (SPY, QQQ, GLD), Indices (^GSPC, ^DJI, ^IXIC, ^VIX, ^NSEI, ^BSESN), FX (EURUSD=X), Indian (RELIANCE.NS, TCS.NS)
 
 ---
 
@@ -406,8 +406,7 @@ Example prompt: "Compare all 9 strategies on MSFT for 2 years"
 | **Binance** | Crypto screener, all pairs |
 | **KuCoin / Bybit+** | Crypto screener |
 | **NASDAQ / NYSE** | US stocks (AAPL, TSLA, NVDA...) |
-| **EGX (Egypt)** | `egx_market_overview`, `egx_stock_screener`, `egx_trade_plan`, `egx_fibonacci_retracement` |
-| **Turkish (BIST)** | Via TradingView screener |
+| **NSE/BSE (India)** | `india_market_overview`, `india_stock_screener`, `india_trade_plan`, `india_fibonacci_retracement`, `india_sector_scan`, `india_sector_scanner`, `india_index_analysis` (NIFTY 50 / SENSEX) |
 
 ---
 
@@ -456,7 +455,7 @@ Every sponsor directly funds new features like Walk-Forward Backtesting, Twitter
 ## 📋 Roadmap
 
 - [x] TradingView technical analysis (30+ indicators)
-- [x] Multi-exchange screener (Binance, KuCoin, MEXC, EGX, US stocks)
+- [x] Multi-exchange screener (Binance, KuCoin, MEXC, NSE/BSE, US stocks)
 - [x] Reddit sentiment analysis
 - [x] Live financial news (Yahoo / MarketWatch / CNBC / CoinDesk / CoinTelegraph)
 - [x] Yahoo Finance real-time prices

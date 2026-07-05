@@ -33,14 +33,14 @@ from tradingview_mcp.core.services.scanner_service import (
     smart_volume_scan,
 )
 from tradingview_mcp.core.services.multi_agent_service import run_multi_agent_analysis
-from tradingview_mcp.core.services.egx_service import (
-    get_egx_market_overview,
-    scan_egx_sector,
-    run_egx_sector_scanner,
-    analyze_egx_index,
-    screen_egx_stocks,
-    generate_egx_trade_plan,
-    analyze_egx_fibonacci,
+from tradingview_mcp.core.services.india_service import (
+    get_india_market_overview,
+    scan_india_sector,
+    run_india_sector_scanner,
+    analyze_india_index,
+    screen_india_stocks,
+    generate_india_trade_plan,
+    analyze_india_fibonacci,
 )
 from tradingview_mcp.core.services.sentiment_service import analyze_sentiment
 from tradingview_mcp.core.services.news_service import fetch_news_summary
@@ -91,12 +91,12 @@ mcp = FastMCP(
     instructions=(
         "Multi-market screener backed by TradingView. "
         "Supports crypto exchanges (KuCoin, Binance, Bybit, MEXC, etc.), stock markets "
-        "(EGX, BIST, NASDAQ, NYSE, Bursa Malaysia, HKEX, SSE, SZSE, TWSE, TPEX), "
+        "(NSE, BSE, NASDAQ, NYSE, Bursa Malaysia, HKEX, SSE, SZSE, TWSE, TPEX), "
         "and futures markets (CME, COMEX, NYMEX, CBOT — equity index, energy, metals, "
         "agriculture, rates, forex, crypto futures). "
         "Tools: top_gainers, top_losers, bollinger_scan, coin_analysis, multi_agent_analysis, "
         "volume_breakout_scanner, futures_market_overview, futures_top_movers, "
-        "futures_category_snapshot, futures_watchlist, egx_market_overview, and more."
+        "futures_category_snapshot, futures_watchlist, india_market_overview, and more."
     ),
 )
 
@@ -108,7 +108,7 @@ def top_gainers(exchange: str = "KUCOIN", timeframe: str = "15m", limit: int = 2
     """Return top gainers for an exchange and timeframe using Bollinger Band analysis.
 
     Args:
-        exchange: Exchange name — crypto: KUCOIN, BINANCE, BYBIT, MEXC; stocks: EGX, BIST, NASDAQ, NYSE, BURSA, HKEX, SSE, SZSE, TWSE, TPEX
+        exchange: Exchange name — crypto: KUCOIN, BINANCE, BYBIT, MEXC; stocks: NSE, BSE, NASDAQ, NYSE, BURSA, HKEX, SSE, SZSE, TWSE, TPEX
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M
         limit: Number of rows to return (max 50)
 
@@ -133,7 +133,7 @@ def top_gainers(exchange: str = "KUCOIN", timeframe: str = "15m", limit: int = 2
 
 @mcp.tool()
 def top_losers(exchange: str = "KUCOIN", timeframe: str = "15m", limit: int = 25) -> list[dict] | dict:
-    """Return top losers for an exchange and timeframe. Supports crypto (KUCOIN, BINANCE, MEXC) and stocks (EGX, BIST, NASDAQ).
+    """Return top losers for an exchange and timeframe. Supports crypto (KUCOIN, BINANCE, MEXC) and stocks (NSE, BSE, NASDAQ).
 
     Returns ``list[dict]`` on success, or an error envelope on total upstream
     failure (``{"error": {"code": "ALL_BATCHES_FAILED", ...}}``).
@@ -159,7 +159,7 @@ def bollinger_scan(exchange: str = "KUCOIN", timeframe: str = "4h", bbw_threshol
     """Scan for assets with low Bollinger Band Width (squeeze detection). Works with crypto and stocks.
 
     Args:
-        exchange: Exchange — crypto: KUCOIN, BINANCE, BYBIT, MEXC; stocks: EGX, BIST, NASDAQ, NYSE, BURSA, HKEX, SSE, SZSE, TWSE, TPEX
+        exchange: Exchange — crypto: KUCOIN, BINANCE, BYBIT, MEXC; stocks: NSE, BSE, NASDAQ, NYSE, BURSA, HKEX, SSE, SZSE, TWSE, TPEX
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M
         bbw_threshold: Maximum BBW value to filter (default 0.04)
         limit: Number of rows to return (max 100)
@@ -207,8 +207,8 @@ def coin_analysis(symbol: str, exchange: str = "KUCOIN", timeframe: str = "15m")
     """Get detailed analysis for a specific asset (coin or stock) on specified exchange and timeframe.
 
     Args:
-        symbol: Symbol — crypto: "BTCUSDT", "ETHUSDT"; stocks: "COMI" (EGX), "THYAO" (BIST), "600519" (SSE), "300251" (SZSE), "2330" (TWSE), "3105" (TPEX)
-        exchange: Exchange — crypto: KUCOIN, BINANCE, MEXC; stocks: EGX, BIST, NASDAQ, NYSE, BURSA, HKEX, SSE, SZSE, TWSE, TPEX
+        symbol: Symbol — crypto: "BTCUSDT", "ETHUSDT"; stocks: "RELIANCE" (NSE), "TCS" (BSE), "600519" (SSE), "300251" (SZSE), "2330" (TWSE), "3105" (TPEX)
+        exchange: Exchange — crypto: KUCOIN, BINANCE, MEXC; stocks: NSE, BSE, NASDAQ, NYSE, BURSA, HKEX, SSE, SZSE, TWSE, TPEX
         timeframe: Time interval (5m, 15m, 1h, 4h, 1D, 1W, 1M)
 
     Returns:
@@ -391,8 +391,8 @@ def multi_agent_analysis(symbol: str, exchange: str = "KUCOIN", timeframe: str =
     """Run a multi-agent debate (Technical, Sentiment, Risk) for a specific symbol.
 
     Args:
-        symbol: Symbol — crypto: "BTCUSDT"; stocks: "COMI" (EGX), "THYAO" (BIST), "600519" (SSE), "300251" (SZSE), "2330" (TWSE), "3105" (TPEX), "GDX" (AMEX)
-        exchange: Exchange — crypto: KUCOIN, BINANCE, MEXC; stocks: EGX, BIST, NASDAQ, NYSE, AMEX, NYSEARCA, PCX, SSE, SZSE, TWSE, TPEX
+        symbol: Symbol — crypto: "BTCUSDT"; stocks: "RELIANCE" (NSE), "TCS" (BSE), "600519" (SSE), "300251" (SZSE), "2330" (TWSE), "3105" (TPEX), "GDX" (AMEX)
+        exchange: Exchange — crypto: KUCOIN, BINANCE, MEXC; stocks: NSE, BSE, NASDAQ, NYSE, AMEX, NYSEARCA, PCX, SSE, SZSE, TWSE, TPEX
         timeframe: Time interval (5m, 15m, 1h, 4h, 1D, 1W)
 
     Returns:
@@ -404,11 +404,11 @@ def multi_agent_analysis(symbol: str, exchange: str = "KUCOIN", timeframe: str =
     return run_multi_agent_analysis(full_symbol, exchange, timeframe)
 
 
-# ── EGX market tools ───────────────────────────────────────────────────────────
+# ── India market tools ─────────────────────────────────────────────────────────
 
 @mcp.tool()
-def egx_market_overview(timeframe: str = "1D", limit: int = 10) -> dict:
-    """Get a comprehensive overview of the Egyptian Exchange (EGX) market.
+def india_market_overview(timeframe: str = "1D", limit: int = 10) -> dict:
+    """Get a comprehensive overview of the Indian (NSE) stock market.
 
     Args:
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M (default 1D for stocks)
@@ -416,105 +416,105 @@ def egx_market_overview(timeframe: str = "1D", limit: int = 10) -> dict:
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
     limit = max(1, min(limit, 20))
-    return get_egx_market_overview(timeframe, limit)
+    return get_india_market_overview(timeframe, limit)
 
 
 @mcp.tool()
-def egx_sector_scan(sector: str = "", timeframe: str = "1D", limit: int = 20) -> dict:
-    """Scan EGX stocks by sector. Shows available sectors if none specified.
+def india_sector_scan(sector: str = "", timeframe: str = "1D", limit: int = 20) -> dict:
+    """Scan NSE stocks by sector. Shows available sectors if none specified.
 
     Args:
-        sector: Sector name (banks, healthcare_and_pharma, real_estate, etc.)
+        sector: Sector name (bank, it, auto, pharma, fmcg, etc.)
                 Leave empty to list all sectors.
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M
         limit: Max results per sector (max 50)
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
     limit = max(1, min(limit, 50))
-    return scan_egx_sector(sector, timeframe, limit)
+    return scan_india_sector(sector, timeframe, limit)
 
 
 @mcp.tool()
-def egx_sector_scanner(
+def india_sector_scanner(
     timeframe: str = "1D",
     top_n_sectors: int = 5,
     top_n_stocks: int = 3,
     min_stock_score: int = 60,
 ) -> dict:
-    """Sector rotation scanner for EGX — identifies hot/cold sectors and top picks.
+    """Sector rotation scanner for NSE — identifies hot/cold sectors and top picks.
 
     Args:
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M (default 1D)
-        top_n_sectors: Number of top sectors to show stock picks for (1-18, default 5)
+        top_n_sectors: Number of top sectors to show stock picks for (1-12, default 5)
         top_n_stocks: Number of top stocks per highlighted sector (1-10, default 3)
         min_stock_score: Minimum stock score for picks (0-100, default 60)
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
-    top_n_sectors = max(1, min(18, top_n_sectors))
+    top_n_sectors = max(1, min(12, top_n_sectors))
     top_n_stocks = max(1, min(10, top_n_stocks))
     min_stock_score = max(0, min(100, min_stock_score))
-    return run_egx_sector_scanner(timeframe, top_n_sectors, top_n_stocks, min_stock_score)
+    return run_india_sector_scanner(timeframe, top_n_sectors, top_n_stocks, min_stock_score)
 
 
 @mcp.tool()
-def egx_index_analysis(index: str = "EGX30", timeframe: str = "1D", limit: int = 30) -> dict:
-    """Analyse an EGX index showing constituent performance with full indicators.
+def india_index_analysis(index: str = "NIFTY50", timeframe: str = "1D", limit: int = 30) -> dict:
+    """Analyse an Indian index showing constituent performance with full indicators.
 
     Args:
-        index: EGX30, EGX70, EGX100, SHARIAH33, EGX35LV, TAMAYUZ
+        index: NIFTY50 or SENSEX
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M (default 1D)
         limit: Number of stocks to show in detail (max 100)
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
     limit = max(1, min(limit, 100))
-    return analyze_egx_index(index, timeframe, limit)
+    return analyze_india_index(index, timeframe, limit)
 
 
 @mcp.tool()
-def egx_stock_screener(
+def india_stock_screener(
     timeframe: str = "1D",
     min_score: int = 55,
     index_filter: str = "",
     limit: int = 20,
 ) -> dict:
-    """Production stock ranking engine for EGX — finds strong stocks with actionable setups.
+    """Production stock ranking engine for NSE — finds strong stocks with actionable setups.
 
     Args:
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M (default 1D)
         min_score: Minimum stock score to include (0-100, default 55)
-        index_filter: Filter by index — EGX30, EGX70, EGX100, SHARIAH33, EGX35LV, TAMAYUZ
+        index_filter: Filter by index — NIFTY50, SENSEX
         limit: Number of results (max 50)
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
     min_score = max(0, min(100, min_score))
     limit = max(1, min(50, limit))
-    return screen_egx_stocks(timeframe, min_score, index_filter, limit)
+    return screen_india_stocks(timeframe, min_score, index_filter, limit)
 
 
 @mcp.tool()
-def egx_trade_plan(symbol: str, timeframe: str = "1D") -> dict:
-    """Generate a full trade plan for a specific EGX stock.
+def india_trade_plan(symbol: str, timeframe: str = "1D") -> dict:
+    """Generate a full trade plan for a specific NSE/BSE stock.
 
     Args:
-        symbol: EGX stock symbol (e.g., "COMI", "TMGH", "FWRY")
+        symbol: NSE/BSE stock symbol (e.g., "RELIANCE", "TCS", "INFY")
         timeframe: One of 5m, 15m, 1h, 4h, 1D, 1W, 1M (default 1D)
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
-    return generate_egx_trade_plan(symbol, timeframe)
+    return generate_india_trade_plan(symbol, timeframe)
 
 
 @mcp.tool()
-def egx_fibonacci_retracement(symbol: str, lookback: str = "52W", timeframe: str = "1D") -> dict:
-    """Fibonacci retracement analysis for EGX stocks.
+def india_fibonacci_retracement(symbol: str, lookback: str = "52W", timeframe: str = "1D") -> dict:
+    """Fibonacci retracement analysis for NSE/BSE stocks.
 
     Args:
-        symbol: EGX stock symbol (e.g., "COMI", "TMGH", "FWRY")
+        symbol: NSE/BSE stock symbol (e.g., "RELIANCE", "TCS", "INFY")
         lookback: Period for swing high/low — "1M", "3M", "6M", "52W", "ALL" (default 52W)
         timeframe: Analysis timeframe (5m, 15m, 1h, 4h, 1D, 1W, 1M — default 1D)
     """
     timeframe = sanitize_timeframe(timeframe, "1D")
     lookback = lookback.strip().upper()
-    return analyze_egx_fibonacci(symbol, lookback, timeframe)
+    return analyze_india_fibonacci(symbol, lookback, timeframe)
 
 
 # ── Multi-timeframe analysis ───────────────────────────────────────────────────
@@ -524,8 +524,8 @@ def multi_timeframe_analysis(symbol: str, exchange: str = "KUCOIN") -> dict:
     """Multi-timeframe alignment analysis (Weekly → Daily → 4H → 1H → 15m).
 
     Args:
-        symbol: Symbol — crypto: "BTCUSDT"; stocks: "COMI" (EGX), "THYAO" (BIST), "600519" (SSE), "300251" (SZSE), "2330" (TWSE), "3105" (TPEX), "GDX" (AMEX)
-        exchange: Exchange — crypto: KUCOIN, BINANCE, MEXC; stocks: EGX, BIST, NASDAQ, NYSE, AMEX, NYSEARCA, PCX, SSE, SZSE, TWSE, TPEX
+        symbol: Symbol — crypto: "BTCUSDT"; stocks: "RELIANCE" (NSE), "TCS" (BSE), "600519" (SSE), "300251" (SZSE), "2330" (TWSE), "3105" (TPEX), "GDX" (AMEX)
+        exchange: Exchange — crypto: KUCOIN, BINANCE, MEXC; stocks: NSE, BSE, NASDAQ, NYSE, AMEX, NYSEARCA, PCX, SSE, SZSE, TWSE, TPEX
     """
     exchange = sanitize_exchange(exchange, "KUCOIN")
     full_symbol = normalize_tradingview_symbol(symbol, exchange)
@@ -563,8 +563,8 @@ def combined_analysis(symbol: str, exchange: str = "NASDAQ", timeframe: str = "1
     """POWER TOOL: TradingView technical analysis + Reddit sentiment + Financial news.
 
     Args:
-        symbol: Asset symbol ("AAPL", "BTCUSDT", "THYAO", "GDX")
-        exchange: Exchange (NASDAQ, NYSE, AMEX, NYSEARCA, PCX, BINANCE, KUCOIN, MEXC, BIST, EGX, TWSE, TPEX)
+        symbol: Asset symbol ("AAPL", "BTCUSDT", "RELIANCE", "GDX")
+        exchange: Exchange (NASDAQ, NYSE, AMEX, NYSEARCA, PCX, BINANCE, KUCOIN, MEXC, NSE, BSE, TWSE, TPEX)
         timeframe: Analysis timeframe (5m, 15m, 1h, 4h, 1D, 1W)
     """
     tech = coin_analysis(symbol, exchange, timeframe)
@@ -926,7 +926,7 @@ def exchanges_list() -> str:
                 return f"Available exchanges: {', '.join(sorted(exchanges))}"
     except Exception:
         pass
-    return "Common exchanges: KUCOIN, BINANCE, BYBIT, MEXC, BITGET, OKX, COINBASE, GATEIO, HUOBI, BITFINEX, KRAKEN, BITSTAMP, BIST, EGX, NASDAQ, TWSE, TPEX"
+    return "Common exchanges: KUCOIN, BINANCE, BYBIT, MEXC, BITGET, OKX, COINBASE, GATEIO, HUOBI, BITFINEX, KRAKEN, BITSTAMP, NSE, BSE, NASDAQ, TWSE, TPEX"
 
 
 # ── Entry point ────────────────────────────────────────────────────────────────

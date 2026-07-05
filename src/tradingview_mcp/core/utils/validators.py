@@ -15,7 +15,7 @@ _TIMEFRAME_ALIASES = {
 
 # Exchanges that represent stock markets (not crypto)
 STOCK_EXCHANGES: Set[str] = {
-    "egx", "bist", "nasdaq", "nyse",
+    "nse", "bse", "nasdaq", "nyse",
     "amex", "nysearca", "pcx",          # NYSE Arca / AMEX (ETFs: GDX, GLD, XLE, SPY, QQQ, etc.)
     "bursa", "myx", "klse", "ace", "leap",
     "hkex", "hk", "hsi",
@@ -37,9 +37,9 @@ EXCHANGE_SCREENER = {
     "bybit": "crypto",
     "okx": "crypto",
     "mexc": "crypto",
-    "bist": "turkey",
-    # Egyptian Stock Market Support
-    "egx": "egypt",
+    # Indian Stock Market Support
+    "nse": "india",     # National Stock Exchange — NIFTY 50
+    "bse": "india",     # Bombay Stock Exchange — SENSEX
     "nasdaq": "america",
     # Malaysia Stock Market Support
     "bursa": "malaysia",
@@ -93,8 +93,8 @@ _EXCHANGE_TV_PREFIX: dict = {
     "pcx": "AMEX",
     "nasdaq": "NASDAQ",
     "nyse": "NYSE",
-    "egx": "EGX",
-    "bist": "BIST",
+    "nse": "NSE",
+    "bse": "BSE",
     "bursa": "MYX",
     "myx": "MYX",
     "klse": "MYX",

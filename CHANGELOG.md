@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Fork] shivc04/tradingview-mcp divergence from upstream
+
+This is a personal fork of `atilaahmettaner/tradingview-mcp`. It diverges
+from upstream by swapping Egyptian (EGX) and Turkish (BIST) market support
+for Indian market support (NSE, BSE):
+
+### Removed
+- `egx_market_overview`, `egx_sector_scan`, `egx_sector_scanner`,
+  `egx_index_analysis`, `egx_stock_screener`, `egx_trade_plan`,
+  `egx_fibonacci_retracement` tools, `core/services/egx_service.py`,
+  `core/data/egx_indices.py`, `core/data/egx_sectors.py`, `coinlist/egx.txt`
+- BIST as an accepted `exchange` value (`coinlist/bist.txt` and its
+  `validators.py` allowlist entries)
+
+### Added
+- `india_market_overview`, `india_sector_scan`, `india_sector_scanner`,
+  `india_index_analysis` (NIFTY 50 / SENSEX), `india_stock_screener`,
+  `india_trade_plan`, `india_fibonacci_retracement` tools, backed by
+  `core/services/india_service.py`
+- `core/data/india_indices.py` / `core/data/india_sectors.py` — unlike the
+  EGX data they replace, these fetch index/sector constituents **live**
+  from TradingView's screener (`Query().set_index(...)`) rather than a
+  hardcoded list, since NIFTY 50 / SENSEX / sectoral index membership
+  reshuffles periodically
+- `nse`/`bse` as generic `exchange` values (`coinlist/nse.txt`,
+  `coinlist/bse.txt`), so every existing generic tool (`top_gainers`,
+  `bollinger_scan`, `volume_breakout_scanner`, etc.) works for Indian stocks
+- `^NSEI` (NIFTY 50) and `^BSESN` (SENSEX) added to `market_snapshot`'s
+  indices group
+
 ## [Unreleased]
 
 ### Fixed

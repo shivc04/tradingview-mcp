@@ -483,13 +483,13 @@ def fetch_atr_for_tickers(
     """Batch-fetch ATR(14) for many tickers in a single scanner POST.
 
     Same workaround as :func:`fetch_atr_for_ticker` but issues one HTTP request
-    for all tickers — important for callers like ``analyze_egx_index`` which
+    for all tickers — important for callers like ``analyze_india_index`` which
     process 200-symbol batches and cannot afford a fan-out of N requests.
 
     Args:
         tickers:          Fully-qualified TradingView symbols
-                          (e.g. ``["EGX:COMI", "EGX:HRHO"]``). Empty list → ``{}``.
-        screener_market:  Scanner market path segment (``"crypto"``, ``"egypt"``,
+                          (e.g. ``["NSE:RELIANCE", "NSE:INFY"]``). Empty list → ``{}``.
+        screener_market:  Scanner market path segment (``"crypto"``, ``"india"``,
                           ``"america"``, …) — the same value passed as
                           ``screener`` to ``tradingview_ta``.
         timeframe:        Optional timeframe (``5m``, ``15m``, ``1h``, ``4h``,
@@ -564,7 +564,7 @@ def fetch_atr_for_ticker(
 
     Thin wrapper around :func:`fetch_atr_for_tickers` kept for the single-symbol
     call sites that don't need batching (``analyze_coin``,
-    ``generate_egx_trade_plan``, ``analyze_egx_fibonacci``).
+    ``generate_india_trade_plan``, ``analyze_india_fibonacci``).
     """
     if not ticker or not screener_market:
         return None

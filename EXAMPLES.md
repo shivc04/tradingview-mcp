@@ -153,17 +153,17 @@ This guide shows real-world examples of how to use the TradingView MCP Server wi
 
 ### Traditional Stock Markets
 ```
-💬 You: "How are Turkish stocks performing today? Show me BIST gainers"
+💬 You: "How are Indian stocks performing today? Show me NSE gainers"
 
-🤖 Claude: [Uses: top_gainers(exchange="BIST", timeframe="1D")]
+🤖 Claude: [Uses: top_gainers(exchange="NSE", timeframe="1D")]
 
-🇹🇷 BIST (Turkish Stock Market) Top Gainers:
+🇮🇳 NSE (Indian Stock Market) Top Gainers:
 
-1. **AKBNK** - ₺58.40 (+4.2%)
-2. **THYAO** - ₺245.50 (+3.8%)  
-3. **ISCTR** - ₺12.35 (+3.1%)
+1. **RELIANCE** - ₹1,304.00 (+4.2%)
+2. **TCS** - ₹3,532.50 (+3.8%)
+3. **INFY** - ₹1,047.20 (+3.1%)
 
-*Turkish market showing strong performance today!*
+*Indian market showing strong performance today!*
 ```
 
 ```
@@ -346,8 +346,8 @@ Found the data! Here's your Ethereum analysis...
 ✅ Good: "Compare Bitcoin 15m vs 1h trends"  
 ❌ Avoid: "How is Bitcoin?"
 
-✅ Good: "Show BIST stocks with Bollinger squeeze"
-❌ Avoid: "Turkish stocks analysis"
+✅ Good: "Show NSE stocks with Bollinger squeeze"
+❌ Avoid: "Indian stocks analysis"
 ```
 
 ### Combining Multiple Tools

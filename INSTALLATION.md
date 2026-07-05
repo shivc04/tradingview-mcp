@@ -403,7 +403,7 @@ chmod -R 755 ~/path/to/tradingview-mcp
 
 ### Recommended Exchanges by Reliability:
 1. 🥇 **KuCoin** - Fastest, most reliable
-2. 🥈 **BIST** - Turkish stocks, very stable
+2. 🥈 **NSE** - Indian stocks, very stable
 3. 🥉 **Binance** - Good but may have rate limits
 
 ## Advanced Configuration

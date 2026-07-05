@@ -1,7 +1,7 @@
 ---
 name: tradingview-mcp
-description: AI Trading Intelligence — live prices, 30+ technical indicators, backtesting (6 strategies), walk-forward overfitting detection, trade logs, equity curves, Reddit sentiment, news, and multi-market screener. Supports stocks, crypto, ETFs, indices, Turkish (BIST), and Egyptian (EGX) markets.
-metadata: { "openclaw": { "emoji": "📈", "always": true, "homepage": "https://github.com/atilaahmettaner/tradingview-mcp" } }
+description: AI Trading Intelligence — live prices, 30+ technical indicators, backtesting (6 strategies), walk-forward overfitting detection, trade logs, equity curves, Reddit sentiment, news, and multi-market screener. Supports stocks, crypto, ETFs, indices, and Indian (NSE/BSE) markets.
+metadata: { "openclaw": { "emoji": "📈", "always": true, "homepage": "https://github.com/shivc04/tradingview-mcp" } }
 ---
 
 # TradingView MCP — AI Trading Intelligence
@@ -69,8 +69,8 @@ python3 ~/.openclaw/tools/trading.py <command> [args]
 |--------|------|
 | "Strong bullish stocks" | `screener_bullish(exchange="NASDAQ")` |
 | "Find oversold stocks" | `screener_oversold(exchange="NASDAQ")` |
-| "Scan Turkish BIST stocks" | `screener_bullish(exchange="BIST")` |
-| "Egyptian Exchange stocks" | `egx_stock_screen()` |
+| "Scan Indian NSE stocks" | `screener_bullish(exchange="NSE")` |
+| "NIFTY 50 stocks" | `india_stock_screener(index_filter="NIFTY50")` |
 
 ## Example Response Formats
 
@@ -116,9 +116,8 @@ Fold 3: Train +11% → Test +10% (rob: 0.91)
 - **Crypto:** BTC-USD, ETH-USD, SOL-USD, BNB-USD, XRP-USD
 - **ETFs:** SPY, QQQ, GLD, VTI, IWM
 - **Indices:** ^GSPC (S&P500), ^IXIC (NASDAQ), ^DJI (Dow), ^VIX
-- **Turkish (BIST):** THYAO.IS, SASA.IS, BIMAS.IS, KCHOL.IS, EKGYO.IS
-- **Egyptian (EGX):** COMI.CA, HRHO.CA, EAST.CA
-- **FX:** EURUSD=X, GBPUSD=X, JPYUSD=X, TRYUSD=X
+- **Indian (NSE/BSE):** RELIANCE.NS, TCS.NS, INFY.NS, HDFCBANK.NS, ^NSEI (NIFTY 50), ^BSESN (SENSEX)
+- **FX:** EURUSD=X, GBPUSD=X, JPYUSD=X, INRUSD=X
 
 ## Strategies Available for Backtesting
 

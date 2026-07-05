@@ -175,7 +175,7 @@ Your OpenClaw agent will have access to all tradingview tools via the wrapper:
 
 ### Screener
 - `screener_bullish`, `screener_oversold`, `screener_strong_trend` — TradingView screener
-- `egx_stock_screen` — Egyptian Exchange specific screening
+- `india_stock_screener` — NSE/BSE (Indian market) specific screening
 
 ## Supported Markets
 
@@ -185,8 +185,7 @@ Your OpenClaw agent will have access to all tradingview tools via the wrapper:
 | Crypto | BTC-USD, ETH-USD, SOL-USD, BNB-USD |
 | ETFs | SPY, QQQ, GLD, VTI |
 | Indices | ^GSPC (S&P500), ^DJI (Dow), ^IXIC (NASDAQ), ^VIX |
-| Turkish | THYAO.IS, SASA.IS, BIMAS.IS, KCHOL.IS |
-| Egyptian | COMI.CA, HRHO.CA, EAST.CA |
+| Indian (NSE/BSE) | RELIANCE.NS, TCS.NS, INFY.NS, ^NSEI (NIFTY 50), ^BSESN (SENSEX) |
 | FX | EURUSD=X, GBPUSD=X, JPYUSD=X |
 
 ## Troubleshooting

@@ -107,7 +107,7 @@ def fetch_bollinger_analysis(
     Fetch analysis using tradingview_ta with Bollinger Band squeeze logic.
 
     Args:
-        exchange:   Exchange identifier (e.g. KUCOIN, BINANCE, EGX).
+        exchange:   Exchange identifier (e.g. KUCOIN, BINANCE, NSE).
         timeframe:  TradingView interval string (5m, 15m, 1h, 4h, 1D, 1W, 1M).
         limit:      Maximum rows to return.
         bbw_filter: Exclude rows where BBW >= this value (squeeze detector).

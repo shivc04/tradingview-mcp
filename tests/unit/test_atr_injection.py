@@ -1,11 +1,11 @@
-"""Regression tests for the ATR null bug in coin_analysis / egx_service.
+"""Regression tests for the ATR null bug in coin_analysis / india_service.
 
 The tradingview_ta library does not expose an "ATR" key in its indicators
 payload, which caused atr.value (and every downstream stop/sizing calc) to
-collapse to None on every coin_analysis / EGX call. The two helpers below
+collapse to None on every coin_analysis / NSE call. The two helpers below
 patch the gap by hitting the public scanner endpoint directly — once per
 ticker for the single helper, once per batch for the plural helper that
-``analyze_egx_index`` uses on 200-symbol passes.
+``analyze_india_index`` uses on 200-symbol passes.
 """
 from __future__ import annotations
 
@@ -95,21 +95,21 @@ class TestFetchAtrForTickers:
         payload = {
             "totalCount": 3,
             "data": [
-                {"s": "EGX:COMI", "d": [1.45]},
-                {"s": "EGX:HRHO", "d": [0.82]},
-                {"s": "EGX:EAST", "d": [3.10]},
+                {"s": "NSE:RELIANCE", "d": [1.45]},
+                {"s": "NSE:TCS", "d": [0.82]},
+                {"s": "NSE:INFY", "d": [3.10]},
             ],
         }
-        tickers = ["EGX:COMI", "EGX:HRHO", "EGX:EAST"]
+        tickers = ["NSE:RELIANCE", "NSE:TCS", "NSE:INFY"]
         # Use 4h so the suffix is preserved (1D drops the suffix — covered in
         # test_daily_uses_bare_atr_column).
         with patch("requests.post", return_value=_mock_response(payload)) as mocked:
-            atr = fetch_atr_for_tickers(tickers, "egypt", "4h")
+            atr = fetch_atr_for_tickers(tickers, "india", "4h")
 
         assert atr == {
-            "EGX:COMI": pytest.approx(1.45),
-            "EGX:HRHO": pytest.approx(0.82),
-            "EGX:EAST": pytest.approx(3.10),
+            "NSE:RELIANCE": pytest.approx(1.45),
+            "NSE:TCS": pytest.approx(0.82),
+            "NSE:INFY": pytest.approx(3.10),
         }
         # All tickers go in a single POST
         kwargs = mocked.call_args.kwargs
@@ -121,43 +121,43 @@ class TestFetchAtrForTickers:
         # Scanner returned only 2 of the 3 requested tickers
         payload = {
             "data": [
-                {"s": "EGX:COMI", "d": [1.45]},
-                {"s": "EGX:EAST", "d": [3.10]},
+                {"s": "NSE:RELIANCE", "d": [1.45]},
+                {"s": "NSE:INFY", "d": [3.10]},
             ]
         }
         with patch("requests.post", return_value=_mock_response(payload)):
-            atr = fetch_atr_for_tickers(["EGX:COMI", "EGX:HRHO", "EGX:EAST"], "egypt", "1D")
-        assert atr["EGX:COMI"] == pytest.approx(1.45)
-        assert atr["EGX:HRHO"] is None
-        assert atr["EGX:EAST"] == pytest.approx(3.10)
+            atr = fetch_atr_for_tickers(["NSE:RELIANCE", "NSE:TCS", "NSE:INFY"], "india", "1D")
+        assert atr["NSE:RELIANCE"] == pytest.approx(1.45)
+        assert atr["NSE:TCS"] is None
+        assert atr["NSE:INFY"] == pytest.approx(3.10)
 
     def test_returns_all_none_on_empty_input(self):
         with patch("requests.post") as mocked:
-            assert fetch_atr_for_tickers([], "egypt", "1D") == {}
+            assert fetch_atr_for_tickers([], "india", "1D") == {}
             assert mocked.call_count == 0  # No request fired
 
     def test_returns_all_none_on_http_error(self):
         bad = MagicMock()
         bad.raise_for_status.side_effect = RuntimeError("boom")
         with patch("requests.post", return_value=bad):
-            atr = fetch_atr_for_tickers(["EGX:COMI", "EGX:HRHO"], "egypt", "1D")
-        assert atr == {"EGX:COMI": None, "EGX:HRHO": None}
+            atr = fetch_atr_for_tickers(["NSE:RELIANCE", "NSE:TCS"], "india", "1D")
+        assert atr == {"NSE:RELIANCE": None, "NSE:TCS": None}
 
     def test_returns_all_none_on_blank_screener(self):
         with patch("requests.post") as mocked:
-            atr = fetch_atr_for_tickers(["EGX:COMI", "EGX:HRHO"], "", "1D")
-        assert atr == {"EGX:COMI": None, "EGX:HRHO": None}
+            atr = fetch_atr_for_tickers(["NSE:RELIANCE", "NSE:TCS"], "", "1D")
+        assert atr == {"NSE:RELIANCE": None, "NSE:TCS": None}
         assert mocked.call_count == 0
 
     def test_handles_invalid_value_per_row(self):
         # One row has a non-numeric value — only that ticker degrades to None
         payload = {
             "data": [
-                {"s": "EGX:COMI", "d": [1.45]},
-                {"s": "EGX:HRHO", "d": ["NaN"]},
+                {"s": "NSE:RELIANCE", "d": [1.45]},
+                {"s": "NSE:TCS", "d": ["NaN"]},
             ]
         }
         with patch("requests.post", return_value=_mock_response(payload)):
-            atr = fetch_atr_for_tickers(["EGX:COMI", "EGX:HRHO"], "egypt", "1D")
-        assert atr["EGX:COMI"] == pytest.approx(1.45)
-        assert atr["EGX:HRHO"] is None
+            atr = fetch_atr_for_tickers(["NSE:RELIANCE", "NSE:TCS"], "india", "1D")
+        assert atr["NSE:RELIANCE"] == pytest.approx(1.45)
+        assert atr["NSE:TCS"] is None
